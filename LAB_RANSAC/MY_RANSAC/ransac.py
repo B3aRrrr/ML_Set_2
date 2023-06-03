@@ -20,7 +20,7 @@ from MY_RANSAC import line
 
 class RANSAC:
     def __init__(self):
-        self.iter_num: int = 100
+        self.iter_num: int = 5000
         
         self.num_key_points:int=2
         
@@ -70,6 +70,8 @@ class RANSAC:
             self.epsilon = case_params["epsilon"]
         if "score" in case_params.keys():
             self.score = case_params["score"]
+        if "iter_num" in case_params.keys():
+            self.iter_num = case_params["iter_num"]
             
         self.x = case_params['x']
         self.y = case_params['y']
@@ -77,7 +79,11 @@ class RANSAC:
     def clear_case(self) -> None:
         pass
     def draw (self):
-        plt.plot(self.x_in,self.y_in,color='red')
+        a = len(self.x_in)
+        b = len(self.x_out)
+        x_line = np.linspace(min(min(self.x_in),min(self.x_out)),max(max(self.x_in),max(self.x_out)),num = a + b)
+        y_line = np.fromfunction(lambda i, j: x_line[i,] ** j, (x_line.shape[0], self.poly_degree+1), dtype=int) @ self.best_params
+        plt.plot(x_line,y_line,label="RANSAC line Interpolated",color='red')
         plt.scatter(self.x_in,self.y_in,label='inlier',color='green')
         plt.scatter(self.x_out,self.y_out,label='outlier',color='blue')
         plt.grid()

@@ -29,7 +29,7 @@ class Point_Generator():
         if k is None:
             k = np.random.uniform(-1,1)
         if b is None:
-            b = np.random.uniform(0,5)
+            b = np.random.uniform(-5,5)
         
         match _case_:
             case "linear":        
@@ -59,7 +59,7 @@ class Point_Generator():
                 outliers = np.vstack((x,y)).T 
             case "complex_1":
                 x = np.linspace(0,10,int(self.inliers_num))
-                y = 1/np.exp(-b) * (np.cos(x  + k   + np.random.normal(scale=eps)) + np.cos(x  + k  + np.random.normal(scale=eps)))
+                y = 25*(np.cos(k*x) + np.sin(k*x))*np.exp(-b*x) + np.random.normal(scale=eps)
                 inliers = np.vstack((x,y)).T
                 
                 x = np.linspace(0,10,int(self.outliers_num)) 
