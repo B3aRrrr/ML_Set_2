@@ -27,7 +27,8 @@ class RANSAC:
         self.inlin_thrsh: float = 0.8
         self.epsilon: float = 0.1 # порог принадлежности точки зависимости
         
-        self.poly1d=None
+        
+        self.best_params =None
         
         self.x_in: list = [] # список принадлежащих 
         self.x_out: list = [] # не принадлежащих
@@ -86,7 +87,7 @@ class RANSAC:
     def fit(self):
         for i in range(self.iter_num):
             indexes = list(range(len(self.x)))
-            ind_sample = np.random.choice(indexes,self.num_key_points)
+            ind_sample = np.random.choice(indexes,self.num_key_points+1) 
             Line = line.Line(
                 x=self.x[ind_sample],
                 y=self.y[ind_sample],
@@ -96,7 +97,8 @@ class RANSAC:
             x_in,y_in,x_out,y_out = Line.devide_points(self.x,self.y,self.epsilon)
             loc_score = len(x_in) / len(self.x)
             if loc_score > self.score:
-                self.best_params = Line.get_poly1d()
+                self.best_params = Line.get_params()
+                
                 self.score=loc_score
                 self.x_in = x_in
                 self.y_in = y_in
